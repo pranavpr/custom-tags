@@ -1,4 +1,4 @@
-(function( $ ) {
+(function($) {
 	'use strict';
 
 	/**
@@ -29,4 +29,28 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
-})( jQuery );
+	$(function($) {
+
+		$('#custom-tags-input').autocomplete({
+				minLength: 3,
+				source: function(name, response) {
+					$.ajax({
+						type: 'GET',
+						dataType: 'json',
+						url: 'http://localhost:4000/search',
+						data: 'q=' + name.term,
+						success: function(data) {
+							response(data);
+						}
+					});
+				}
+			})
+			.autocomplete("instance")._renderItem = function(ul, item) {
+				return $("<li>")
+					.append("<div>" + item.tag_id + "</div>")
+					.appendTo(ul);
+			};
+
+	});
+
+})(jQuery);
